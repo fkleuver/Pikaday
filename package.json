@@ -10,16 +10,68 @@
   "homepage": "http://dbushell.github.io/Pikaday/",
   "bugs": "https://github.com/dbushell/Pikaday/issues",
   "license": "(0BSD OR MIT)",
-  "main": "pikaday.js",
+  "main": "dist/commonjs/pikaday.js",
+  "typings": "dist/commonjs/pikaday.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/dbushell/Pikaday.git"
   },
+  "scripts": {
+    "test:original": "testling",
+    "lint:original": "jshint *.js plugins/*.js tests/*.js",
+    "lint": "cross-env tslint --project tsconfig.json",
+    "pretest": "cross-env npm run lint",
+    "test": "cross-env rimraf dist && tsc && karma start --single-run",
+    "develop": "concurrently \"./node_modules/.bin/tsc --watch\" \"./node_modules/.bin/karma start\"",
+    "prebuild:amd": "cross-env rimraf dist/amd",
+    "build:amd": "cross-env tsc --project tsconfig.build.json --outDir dist/amd --module amd",
+    "postbuild:amd": "cross-env copyfiles examples/**/* plugins/**/* css/**/* scss/**/* dist/amd",
+    "prebuild:commonjs": "cross-env rimraf dist/commonjs",
+    "build:commonjs": "cross-env tsc --project tsconfig.build.json --outDir dist/commonjs --module commonjs",
+    "postbuild:commonjs": "cross-env copyfiles examples/**/* plugins/**/* css/**/* scss/**/*  dist/commonjs",
+    "prebuild:es2015": "cross-env rimraf dist/es2015",
+    "build:es2015": "cross-env tsc --project tsconfig.build.json --outDir dist/es2015 --module es2015 --target es2015",
+    "postbuild:es2015": "cross-env copyfiles examples/**/* plugins/**/* css/**/* scss/**/*  dist/es2015",
+    "prebuild:native-modules": "cross-env rimraf dist/native-modules",
+    "build:native-modules": "cross-env tsc --project tsconfig.build.json --outDir dist/native-modules --module es2015",
+    "postbuild:native-modules": "cross-env copyfiles examples/**/* plugins/**/* css/**/* scss/**/*  dist/native-modules",
+    "prebuild:system": "cross-env rimraf dist/system",
+    "build:system": "cross-env tsc --project tsconfig.build.json --outDir dist/system --module system",
+    "postbuild:system": "cross-env copyfiles examples/**/* plugins/**/* css/**/* scss/**/*  dist/system",
+    "prebuild": "cross-env rimraf dist",
+    "build": "concurrently \"npm run build:amd\" \"npm run build:commonjs\" \"npm run build:es2015\" \"npm run build:native-modules\" \"npm run build:system\"",
+    "predoc": "cross-env rimraf doc/api.json && rimraf dist/doc-temp && tsc --project tsconfig.build.json --outFile dist/doc-temp/pikaday.js && node doc/shape-defs && copyfiles tsconfig.json dist/doc-temp",
+    "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --mode modules --target ES6 --name pikaday-docs dist/doc-temp/",
+    "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
+    "changelog": "cross-env conventional-changelog -p ux -i doc/CHANGELOG.md -s",
+    "bump-version": "npm --no-git-tag-version version",
+    "preprepare-release": "cross-env npm run test",
+    "prepare-release": "cross-env npm run changelog && npm run build && npm run doc"
+  },
   "devDependencies": {
-    "mocha": "~1.18.2",
+    "@types/jasmine": "^2.6.3",
+    "@types/node": "^8.0.50",
+    "concurrently": "^3.5.0",
+    "conventional-changelog-cli": "^1.3.4",
+    "copyfiles": "^1.2.0",
+    "cross-env": "^5.1.1",
     "expect.js": "^0.3.1",
+    "jasmine-core": "^2.8.0",
+    "jshint": "^2.9",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-requirejs": "^1.1.0",
+    "mocha": "~1.18.2",
+    "moment": "^2.19.1",
+    "requirejs": "^2.3.5",
+    "requirejs-text": "^2.0.15",
+    "rimraf": "^2.6.2",
     "testling": "^1.7",
-    "jshint": "^2.9"
+    "tslint": "^5.8.0",
+    "typedoc": "^0.9.0",
+    "typescript": "^2.6.1"
   },
   "testling": {
     "harness": "mocha",
@@ -32,9 +84,5 @@
       "safari/latest",
       "opera/latest"
     ]
-  },
-  "scripts": {
-    "test": "testling",
-    "lint": "jshint *.js plugins/*.js tests/*.js"
   }
 }

@@ -7,8 +7,8 @@
     "date"
   ],
   "main": [
-    "./pikaday.js",
-    "./css/pikaday.css"
+    "dist/commonjs/pikaday.js",
+    "dist/commonjs/css/pikaday.css"
   ],
   "dependencies": {},
   "ignore": [

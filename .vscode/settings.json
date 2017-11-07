@@ -1,0 +1,8 @@
+{
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.formatOnSave": false, 
+    "typescript.format.enable": true,
+    "json.format.enable": false,
+    "html.format.enable": false
+  }
+  

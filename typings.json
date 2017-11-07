@@ -1,0 +1,5 @@
+{
+    "name": "pikaday",
+    "main": "dist/amd/pikaday.d.ts"
+  }
+  

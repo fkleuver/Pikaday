@@ -1,3 +1,11 @@
 node_modules
+bower_components
+.idea
+.DS_STORE
+*.swp
+npm-debug.log*
+.test
+dist/doc-temp
+dist/test
 .c9revisions
 .c9

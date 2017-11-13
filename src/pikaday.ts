@@ -298,7 +298,6 @@ function renderTable(opts: PikadayOptionsConfigured, data: string[], randId: str
  * Pikaday constructor
  */
 export class Pikaday {
-    public input: HTMLInputElement;
     public pickerWrapper: HTMLDivElement;
     public calendars: { month: number; year: number }[];
     public opts: PikadayOptionsConfigured;
@@ -358,9 +357,9 @@ export class Pikaday {
         if (opts.bound) {
             this.hide();
             this.pickerWrapper.className += " is-bound";
-            addEvent(this.input, "click", this.onInputClick);
-            addEvent(this.input, "focus", this.onInputFocus);
-            addEvent(this.input, "blur", this.onInputBlur);
+            addEvent(opts.field, "click", this.onInputClick);
+            addEvent(opts.field, "focus", this.onInputFocus);
+            addEvent(opts.field, "blur", this.onInputBlur);
         } else {
             this.show();
         }
@@ -389,8 +388,8 @@ export class Pikaday {
                 if (this.opts.bound) {
                     sto(() => {
                         this.hide();
-                        if (this.opts.blurFieldOnSelect && this.input) {
-                            this.input.blur();
+                        if (this.opts.blurFieldOnSelect && this.opts.field) {
+                            this.opts.field.blur();
                         }
                     }, 100);
                 }
@@ -434,8 +433,8 @@ export class Pikaday {
             switch (e.keyCode) {
                 case 13:
                 case 27:
-                    if (this.input) {
-                        this.input.blur();
+                    if (this.opts.field) {
+                        this.opts.field.blur();
                     }
                     break;
                 case 37:
@@ -520,12 +519,12 @@ export class Pikaday {
             }
         }
         do {
-            if (hasClass(pEl, "pika-single") || pEl === this.input) {
+            if (hasClass(pEl, "pika-single") || pEl === this.opts.field) {
                 return;
             }
             pEl = pEl.parentNode as HTMLElement;
         } while (pEl);
-        if (this.isPickerOpen && target !== this.input && pEl !== this.input) {
+        if (this.isPickerOpen && target !== this.opts.field && pEl !== this.opts.field) {
             this.hide();
         }
     }
